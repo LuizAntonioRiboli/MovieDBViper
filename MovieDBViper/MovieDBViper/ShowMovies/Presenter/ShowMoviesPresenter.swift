@@ -11,6 +11,8 @@ import UIKit
 /// ShowMovies Module Presenter
 class ShowMoviesPresenter {
     
+    var pageCounter: Int = 1
+    
     weak private var _view: ShowMoviesViewProtocol?
     private var interactor: ShowMoviesInteractorProtocol
     private var wireframe: ShowMoviesRouterProtocol
@@ -46,12 +48,31 @@ extension ShowMoviesPresenter: ShowMoviesPresenterProtocol {
         interactor.search(text: text!, presenter: self)
     }
     
-    func searchDidFetch(movies: [Movie]?, error: Error?) {
+    func requestDidFetch(movies: [Movie]?, error: Error?) {
         if error == nil && !(movies?.isEmpty ?? true) {
             _view?.set(movies: movies!)
+            _view?.setNextPage(page: pageCounter)
         }
         else {
             _view?.set(movies: [])
         }
+    }
+    
+    // mark
+    func getNextPage(){
+        print(pageCounter)
+        pageCounter += 1
+        print(pageCounter)
+
+        interactor.nextPage(page: pageCounter, presenter: self)
+        
+    }
+    
+    func getPrevPage(){
+        print(pageCounter)
+        pageCounter -= 1
+        print(pageCounter)
+
+        interactor.nextPage(page: pageCounter, presenter: self)
     }
 }

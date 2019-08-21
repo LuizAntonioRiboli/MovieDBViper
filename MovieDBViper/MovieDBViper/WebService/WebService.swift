@@ -97,8 +97,26 @@ class WebService {
         }
     }
     
-    func getNowPlayingMovies(completion: @escaping NowPlayingMoviesCompletionBlock) {
-        getDataFromURL(urlString: "https://api.themoviedb.org/3/movie/now_playing?api_key=\(apiKey)&language=en-US&page=1") { data, error in
+//    func getNowPlayingMovies(completion: @escaping NowPlayingMoviesCompletionBlock) {
+//        getDataFromURL(urlString: "https://api.themoviedb.org/3/movie/now_playing?api_key=\(apiKey)&language=en-US&page=1") { data, error in
+//            if let error = error {
+//                completion(nil, error)
+//            } else if let data = data {
+//                do {
+//                    let nowPlayingMovies = try JSONDecoder().decode(NowPlayingMovies.self, from: data)
+//                    completion(nowPlayingMovies,nil)
+//                }
+//                catch {
+//                    completion(nil, error)
+//                }
+//            } else {
+//                completion(nil, nil)
+//            }
+//        }
+//    }
+    
+    func getNowPlayingMovies(page: Int, completion: @escaping NowPlayingMoviesCompletionBlock) {
+        getDataFromURL(urlString: "https://api.themoviedb.org/3/movie/now_playing?api_key=\(apiKey)&language=en-US&page=\(page)") { data, error in
             if let error = error {
                 completion(nil, error)
             } else if let data = data {

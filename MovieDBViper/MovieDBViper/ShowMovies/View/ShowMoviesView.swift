@@ -15,9 +15,39 @@ class ShowMoviesView: UIViewController {
     @IBOutlet weak var spinner: UIActivityIndicatorView!
     @IBOutlet weak var noResultsView: UIView!
     
+    // Dev:
+    @IBOutlet weak var pageLabel: UILabel!
+    
+    @IBOutlet weak var prevPage: UIButton!
+    @IBAction func prevPageAction(_ sender: Any) {
+        
+        collectionView.isHidden = true
+        pageLabel.isHidden = true
+        nextPage.isHidden = true
+        prevPage.isHidden = true
+        
+        presenter.getPrevPage()
+    }
+    
+    
+    @IBOutlet weak var nextPage: UIButton!
+    @IBAction func nextPageAction(_ sender: Any) {
+        
+        collectionView.isHidden = true
+        pageLabel.isHidden = true
+        nextPage.isHidden = true
+        prevPage.isHidden = true
+        
+        // passa pra prox pag
+        presenter.getNextPage()
+        
+    }
+    
+    
     private var presenter: ShowMoviesPresenterProtocol!
     
     var movies: [Movie]?
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -25,6 +55,7 @@ class ShowMoviesView: UIViewController {
         collectionView.delegate = self
         noResultsView.isHidden = true
     }
+    
     
     func initMoviesViewAllMovies(presenter: ShowMoviesPresenter) {
         self.presenter = presenter
@@ -35,6 +66,10 @@ class ShowMoviesView: UIViewController {
         self.presenter = presenter
         collectionView.isHidden = true
         presenter.viewDidInitSearch()
+        pageLabel.isHidden = true
+        nextPage.isHidden = true
+        prevPage.isHidden = true
+
     }
     
 }
@@ -52,7 +87,19 @@ extension ShowMoviesView: ShowMoviesViewProtocol {
                 self.noResultsView.isHidden = false
                 self.collectionView.isHidden = true
             }
+            self.collectionView.isHidden = false
+            self.pageLabel.isHidden = false
+            self.nextPage.isHidden = false
+            self.prevPage.isHidden = false
+            
             self.collectionView.reloadData()
+            
+        }
+    }
+    
+    func setNextPage(page: Int){
+        DispatchQueue.main.async {
+            self.pageLabel.text = "Page \(page)"
         }
     }
 }

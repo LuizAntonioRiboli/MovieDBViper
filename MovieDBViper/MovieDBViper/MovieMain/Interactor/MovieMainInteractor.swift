@@ -36,7 +36,7 @@ class MovieMainInteractor: MovieMainInteractorProtocol {
     }
     
     func getNowPlayingMovies(presenter: MovieMainPresenterProtocol) {
-        WebService.sharedService.getNowPlayingMovies { nowPlayingMovies, error in
+        WebService.sharedService.getNowPlayingMovies(page: 1) { nowPlayingMovies, error in
             if let error = error {
                 presenter.nowPlayingMoviesDidFetch(nowPlayingMovies: nil, error: error)
             }

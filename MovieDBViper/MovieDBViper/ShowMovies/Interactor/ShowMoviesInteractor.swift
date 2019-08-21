@@ -13,7 +13,7 @@ class ShowMoviesInteractor: ShowMoviesInteractorProtocol {
     func search(text: String, presenter: ShowMoviesPresenterProtocol) {
         WebService.sharedService.search(text: text) { data, error in
             if let error = error {
-                presenter.searchDidFetch(movies: nil, error: error)
+                presenter.requestDidFetch(movies: nil, error: error)
             }
             else if let data = data {
                 var movies: [Movie] = []
@@ -23,7 +23,26 @@ class ShowMoviesInteractor: ShowMoviesInteractorProtocol {
                         movies.append(Movie(id: $0.id, coverData: data, title: $0.title, ratings: $0.voteAverage, overview: $0.overview))
                     }
                 }
-                presenter.searchDidFetch(movies: movies, error: nil)
+                presenter.requestDidFetch(movies: movies, error: nil)
+            }
+        }
+    }
+    
+    // mark
+    func nextPage(page: Int ,presenter: ShowMoviesPresenterProtocol) {
+        WebService.sharedService.getNowPlayingMovies(page: page) { data, error in
+            if let error = error {
+                presenter.requestDidFetch(movies: nil, error: error)
+            }
+            else if let data = data {
+                var movies: [Movie] = []
+                data.results?.forEach {
+                    let data = WebService.sharedService.getCoverFrom(posterPath: $0.posterPath)
+                    if data != nil {
+                        movies.append(Movie(id: $0.id, coverData: data, title: $0.title, ratings: $0.voteAverage, overview: $0.overview))
+                    }
+                }
+                presenter.requestDidFetch(movies: movies, error: nil)
             }
         }
     }
